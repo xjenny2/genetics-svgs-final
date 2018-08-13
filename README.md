@@ -34,8 +34,8 @@ In addition, the ClinVar program requires the download of this data file: https:
 - NCBI REFSEQ ID: specific to isoform; used to parse data.  Only enter the numbers (omit "NP_").  For example, for COL6A1 (NP_001839), you should enter 001839.
 - Ascending or Descending: note whether the protein is on the positive or negative strand
 - Number/type of domains: used to scrape domain positions from pfam.  Follow prompting to indicate how many/what types of domains to show.
-- Whether or not to add editable files: if you have a file for editable base locations, enter Y
-  - if Y: enter file directory
+- Whether or not to add editable bases
+  - if yes, will follow up with prompt to enter file directory
   
 **Notes:**
 - When deciding pathogenicity, this script prefers conflicting reports in this order: uncertain > likely pathogenic > pathogenic

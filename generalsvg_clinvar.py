@@ -1,24 +1,24 @@
-import re
+# import re
 import csv
 import os
 import argparse
 import functionsclinvar as fc
 import shapes
 
-parser = argparse.ArgumentParser(description="sets file name")
+parser = argparse.ArgumentParser(description="Sets file paths")
 parser.add_argument("startfile", help="Enter name of data file")
 parser.add_argument("destination", help="Enter name of destination file")
 args = parser.parse_args()
 
-if os.path.exists(args.startfile) and os.path.exists(args.destination):
+if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
     print "All files exist--running program"
 
     # completes url for accessing pfam/uniprot
-    proteinid = raw_input('Enter Protein Accession ID: ')
-    gene_name = fc.genename(proteinid)
+    protein_id = raw_input('Enter Protein Accession ID: ')
+    gene_name = fc.genename(protein_id)
 
     # isoform
-    refseqid = raw_input('Enter REFSEQ # (NP_###): ')
+    refseq_id = raw_input('Enter NCBI REFSEQ # (NP_###): ')
 
     # for checking ascending/descending later
     order = raw_input('Ascending or Descending? (enter A or D): ')
@@ -32,7 +32,7 @@ if os.path.exists(args.startfile) and os.path.exists(args.destination):
         print "Error: not a number"
         repeats = raw_input('How many kinds of domains? ')
     # prints out info for check
-    domainresults, lengthprotein = fc.domains(repeats, proteinid)
+    domainresults, lengthprotein = fc.domains(repeats, protein_id)
     print 'Gene: ' + gene_name
     print 'Length: ' + str(lengthprotein) + ' amino acids'
 
@@ -43,26 +43,27 @@ if os.path.exists(args.startfile) and os.path.exists(args.destination):
         print "Error: please enter Y or N"
         edits = raw_input('Would you like to include editable bases? (enter Y or N): ')
     if edits == "Y" or edits == "y":
-        editfile = raw_input("Enter file directory: ")
-        if os.path.exists(editfile):
+        editfile = raw_input("Enter file path: ")
+        if os.path.isfile(editfile):
             print "Edits file exists, parsing data..."
             with open(editfile) as tsv:
                 editsfile = csv.reader(tsv, delimiter="\t")
-                edits_list = fc.edits(editsfile, refseqid, len(str(refseqid)))
-        while os.path.exists(editfile) is False:
-            print "Error: please enter valid directory"
-            editfile = raw_input("Enter file directory: ")
+                edits_list = fc.edits(editsfile, refseq_id, len(str(refseq_id)))
+        while os.path.isfile(editfile) is False:
+            print "Error: please enter valid path"
+            editfile = raw_input("Enter file path: ")
 
     # parse data
     print("Parsing ClinVar data...")
     results = []
     with open(args.startfile) as tsv:
         reader = csv.DictReader(tsv, delimiter="\t")
-        resultsraw, errors = fc.readresults(reader, gene_name, refseqid)
+        resultsraw, errors = fc.readresults(reader, gene_name, refseq_id)
         if order == 'A' or order == 'a':
             results, errors = fc.checkascending(resultsraw, errors)
         elif order == 'D' or order == 'd':
             results, errors = fc.checkdescending(resultsraw, errors)
+        print results
         if len(results) == 0:
             print "Error: no results found"
             raise SystemExit
@@ -86,7 +87,7 @@ if os.path.exists(args.startfile) and os.path.exists(args.destination):
                     # Domain
                     for domain in domainresults:
                         f.write('\n<!-- Domain -->\n')
-                        f.write(shapes.bluerect(height, domain[0]*3+1, domain[1]*3+1))
+                        f.write(shapes.rect(height, domain[0] * 3 - 1, domain[1] * 3 - 1))
 
                     # line and labels
                     f.write('\n<!-- #LINE + LABELS -->\n')
@@ -114,7 +115,7 @@ if os.path.exists(args.startfile) and os.path.exists(args.destination):
 
                     # ticks (every 100 AAs)
                     f.write('\n<!-- TICKS ON #LINE -->\n')
-                    position = 1
+                    position = 299
                     while position <= length:
                         f.write(
                             '\t<line x1="' + str(position) + '" y1="' + str(height - 5) +
@@ -143,38 +144,41 @@ if os.path.exists(args.startfile) and os.path.exists(args.destination):
                     line1 = 100
                     line2 = 200
                     if sublist[1] == 2 or sublist[1] == 1:
-                        stroke = '#ff5e6b'  # pink
-                        fill = '#ffa3aa'
+                        fill = '#FF6D8F'  # red
+                        stroke = '#960c2c'
 
                         if sublist[2] == 2:  # nonsense
-                            fill = '#ffde72'  # yellow
-                            stroke = '#ffa716'
+                            fill = '#FFFF8E'  # yellow
+                            stroke = '#ffaa00'
 
                         elif sublist[2] == 1:  # gly
-                            fill = '#9f9eff'  # purple
-                            stroke = '#7270ff'
+                            fill = '#91bdff'  # blue
+                            stroke = '#004ec4'
 
                         if overlaps_path == 0:
                             f.write(shapes.triangle(line2, num, fill, stroke))
                             f.write(shapes.line(line2, num, stroke))
                         else:
-                            line2 = 168 - (overlaps_path * 7)
+                            line2 = 175 - (overlaps_path * 9)
                             f.write(shapes.overlap_triangle(line2, num, fill, stroke))
 
                     elif sublist[1] == 0:
-                        fill = '#c2ffa3'  # green
-                        stroke = '#478c24'
+                        fill = '#c8ff72'  # green
+                        stroke = '#5d8c15'
 
                     if overlaps == 0:
                         f.write(shapes.triangle(line1, num, fill, stroke))
                         f.write(shapes.line(line1, num, stroke))
+                    elif len(edits_list) != 0:
+                        line1 = 68 - (overlaps * 9)
+                        f.write(shapes.overlap_triangle(line1, num, fill, stroke))
                     else:
-                        line1 = 68 - (overlaps * 7)
+                        line1 = 75 - (overlaps * 9)
                         f.write(shapes.overlap_triangle(line1, num, fill, stroke))
 
                 # editable bases
                 for sublist in edits_list:
-                    mid1 = str(int(sublist) * 3 + 1)
+                    mid1 = str(int(sublist) * 3 - 1)
                     f.write(shapes.circle(65, mid1))
 
                 f.write('</svg>')

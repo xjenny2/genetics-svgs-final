@@ -3,6 +3,50 @@ import requests
 from bs4 import BeautifulSoup as bs
 
 
+# get name of gene from uniprot
+def genename(proteinid):
+    site = requests.get('https://www.uniprot.org/uniprot/' + proteinid)
+
+    data = site.text
+
+    soup = bs(data, 'lxml')
+
+    div = soup.find('div', {'class': 'entry-overview-content'}, id="content-gene")
+    gene_name = str(div.contents[0].string)
+    return gene_name
+
+
+# find domain positions and overall protein length
+def domains(repeats, proteinid):  # number of domains, protein id
+    site = requests.get("https://pfam.xfam.org/protein/" + proteinid)
+
+    data = site.text
+
+    soup = bs(data, 'lxml')
+
+    proteinlength = ''
+    for td in soup.find('table', {'class':'layout'}).find_all('td', {"class":"data"})[2]:
+        raw_length = str(td).strip()
+        stringpat = re.compile('\d+(?= amino acids)')
+        proteinlength = int(str(stringpat.findall(raw_length))[2:-2])
+
+    n = 1
+    results = []
+    if int(repeats) == 0:
+        results = []
+    while 0 < n <= int(repeats):
+        domaintype = raw_input('Enter domain type #%d: ' %n)
+        url = '/family/%s' % domaintype
+        for url in soup.find('table', {'class': 'resultTable details'}).find_all('a', {'href': url}):
+            td = url.parent
+            next = str(td.next_sibling.next_sibling.string)
+            nextnext = str(td.next_sibling.next_sibling.next_sibling.next_sibling.string)
+            result = [int(next), int(nextnext)]
+            results.append(result)
+        n += 1
+    return results, proteinlength
+
+
 # parse general results from clinvar
 def readresults(table, gene_name, reference_id): # data source, name of gene, NP ID
     resultsraw = []
@@ -71,50 +115,6 @@ def readresults(table, gene_name, reference_id): # data source, name of gene, NP
     return resultsraw, errors
 
 
-# get name of gene from uniprot
-def genename(proteinid):
-    site = requests.get('https://www.uniprot.org/uniprot/' + proteinid)
-
-    data = site.text
-
-    soup = bs(data, 'lxml')
-
-    div = soup.find('div', {'class': 'entry-overview-content'}, id="content-gene")
-    gene_name = str(div.contents[0].string)
-    return gene_name
-
-
-# find domain positions and overall protein length
-def domains(repeats, proteinid):  # number of domains, protein id
-    site = requests.get("https://pfam.xfam.org/protein/" + proteinid)
-
-    data = site.text
-
-    soup = bs(data, 'lxml')
-
-    proteinlength = ''
-    for td in soup.find('table', {'class':'layout'}).find_all('td', {"class":"data"})[2]:
-        raw_length = str(td).strip()
-        stringpat = re.compile('\d+(?= amino acids)')
-        proteinlength = int(str(stringpat.findall(raw_length))[2:-2])
-
-    n = 1
-    results = []
-    if int(repeats) == 0:
-        results = []
-    while 0 < n <= int(repeats):
-        domaintype = raw_input('Enter domain type #%d: ' %n)
-        url = '/family/%s' % domaintype
-        for url in soup.find('table', {'class': 'resultTable details'}).find_all('a', {'href': url}):
-            td = url.parent
-            next = str(td.next_sibling.next_sibling.string)
-            nextnext = str(td.next_sibling.next_sibling.next_sibling.next_sibling.string)
-            result = [int(next), int(nextnext)]
-            results.append(result)
-        n += 1
-    return results, proteinlength
-
-
 # checks order
 def checkascending(resultsraw, errors):
     results = []
@@ -142,6 +142,14 @@ def checkdescending(resultsraw, errors):
     return results, errors
 
 
+# returns how many overlapping markers there are at given location
+def checkoverlaps(num, list_location, overlaps):
+    for number in list_location:
+        if number == num:
+            overlaps += 1
+    return overlaps
+
+
 # parse edits file
 def edits(reader, protein_id, number):
     editslist = []
@@ -155,25 +163,3 @@ def edits(reader, protein_id, number):
             location = str(location_pat.findall(row[1]))[2:-2]
             editslist.append(location)
     return editslist
-
-
-# parse ccrs file
-def ccrs(reader):
-    ccrslist = []
-    for row in reader:
-        position = row[0]
-        position = int(position)
-        percent = row[1]
-        percent = float(percent)
-        result = [position, percent]
-        ccrslist.append(result)
-
-    return ccrslist
-
-
-# returns how many overlapping markers there are at given location
-def checkoverlaps(num, list_location, overlaps):
-    for number in list_location:
-        if number == num:
-            overlaps += 1
-    return overlaps

@@ -4,6 +4,50 @@ from bs4 import BeautifulSoup as bs
 import pysam
 
 
+# gives gene name
+def genename(reference_id):
+    site = requests.get('https://www.uniprot.org/uniprot/' + reference_id)
+
+    data = site.text
+
+    soup = bs(data, 'lxml')
+
+    div = soup.find('div', {'class': 'entry-overview-content'}, id="content-gene")
+    gene_name = str(div.contents[0].string)
+    return gene_name
+
+
+# gives domain positions and protein length
+def domains(repeats, reference_id):  # number of domains, refseq id
+    site = requests.get("https://pfam.xfam.org/protein/" + reference_id)
+
+    data = site.text
+
+    soup = bs(data, 'lxml')
+
+    proteinlength = ''
+    for td in soup.find('table', {'class':'layout'}).find_all('td', {"class":"data"})[2]:
+        raw_length = str(td).strip()
+        stringpat = re.compile('\d+(?= amino acids)')
+        proteinlength = int(str(stringpat.findall(raw_length))[2:-2])
+
+    n = 1
+    results = []
+    if int(repeats) == 0:
+        results = []
+    while 0 < n <= int(repeats):
+        domaintype = raw_input('Enter domain type #%d: ' %n)
+        url = '/family/%s' % domaintype
+        for url in soup.find('table', {'class': 'resultTable details'}).find_all('a', {'href': url}):
+            td = url.parent
+            next = str(td.next_sibling.next_sibling.string)
+            nextnext = str(td.next_sibling.next_sibling.next_sibling.next_sibling.string)
+            result = [int(next), int(nextnext)]
+            results.append(result)
+        n += 1
+    return results, proteinlength
+
+
 # parses data from tabix master file
 def readresults(chrom, startpos, endpos):
     location_pat = re.compile(
@@ -97,50 +141,6 @@ def checkdescending(listresults):
         elif result[0] > maximum:
             errors.append("Error: %d not descending from %d" % (result[0], maximum))
     return results, errors
-
-
-# gives domain positions and protein length
-def domains(repeats, reference_id):  # number of domains, refseq id
-    site = requests.get("https://pfam.xfam.org/protein/" + reference_id)
-
-    data = site.text
-
-    soup = bs(data, 'lxml')
-
-    proteinlength = ''
-    for td in soup.find('table', {'class':'layout'}).find_all('td', {"class":"data"})[2]:
-        raw_length = str(td).strip()
-        stringpat = re.compile('\d+(?= amino acids)')
-        proteinlength = int(str(stringpat.findall(raw_length))[2:-2])
-
-    n = 1
-    results = []
-    if int(repeats) == 0:
-        results = []
-    while 0 < n <= int(repeats):
-        domaintype = raw_input('Enter domain type #%d: ' %n)
-        url = '/family/%s' % domaintype
-        for url in soup.find('table', {'class': 'resultTable details'}).find_all('a', {'href': url}):
-            td = url.parent
-            next = str(td.next_sibling.next_sibling.string)
-            nextnext = str(td.next_sibling.next_sibling.next_sibling.next_sibling.string)
-            result = [int(next), int(nextnext)]
-            results.append(result)
-        n += 1
-    return results, proteinlength
-
-
-# gives gene name
-def genename(reference_id):
-    site = requests.get('https://www.uniprot.org/uniprot/' + reference_id)
-
-    data = site.text
-
-    soup = bs(data, 'lxml')
-
-    div = soup.find('div', {'class': 'entry-overview-content'}, id="content-gene")
-    gene_name = str(div.contents[0].string)
-    return gene_name
 
 
 # returns how many overlapping markers there are at given location

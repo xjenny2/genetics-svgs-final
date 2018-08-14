@@ -18,11 +18,11 @@ In addition, the ClinVar program requires the download of this data file: https:
 
 ## Programs
 ### Contents
-- **generalsvg_clinvar.py**: writes SVG file showing ClinVar variants
-  - **functionsclinvar.py**: various functions used in the generalsvg_clinvar.py program
-- **generalsvg_gnomad.py**: writes SVG file showing gnomAD variants
-  - **functionsgnomad.py**: various functions used in the generalsvg_gnomad.py program
-- **shapes.py**: various functions for writing SVG shapes (used in for both ClinVar and gnomAD)
+- [generalsvg_clinvar.py](generalsvg_clinvar.py): writes SVG file showing ClinVar variants
+  - [functionsclinvar.py](functionsclinvar.py): various functions used in the generalsvg_clinvar.py program
+- [generalsvg_gnomad.py](generalsvg_clinvar.py): writes SVG file showing gnomAD variants
+  - [functionsgnomad.py](functionsgnomad.py): various functions used in the generalsvg_gnomad.py program
+- [shapes.py](shapes.py): various functions for writing SVG shapes (used in for both ClinVar and gnomAD)
 ### generalsvg_clinvar:
 
 **Usage:** generalsvg_gnomad.py input destination [-h]

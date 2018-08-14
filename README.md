@@ -4,7 +4,7 @@
 The programs in this repository (generalsvg_clinvar.py and generalsvg_gnomad.py) create SVG figures representing the mutations along a given protein.
 
 ### Prerequisites
-These programs use the following Python libraries:
+These programs uses Python 2.7 and the following Python libraries:
 - re
 - pysam *
 - requests *
@@ -18,19 +18,19 @@ In addition, the ClinVar program requires the download of this data file: https:
 
 ## Programs
 ### Contents
-- **generalsvg_clinvar.py**: writes SVG file showing ClinVar variants
-  - **functionsclinvar.py**: various functions used in the generalsvg_clinvar.py program
-- **generalsvg_gnomad.py**: writes SVG file showing gnomAD variants
-  - **functionsgnomad.py**: various functions used in the generalsvg_gnomad.py program
-- **shapes.py**: various functions for writing SVG shapes (used in for both ClinVar and gnomAD)
+- [generalsvg_clinvar.py](generalsvg_clinvar.py): writes SVG file showing ClinVar variants
+  - [functionsclinvar.py](functionsclinvar.py): various functions used in the generalsvg_clinvar.py program
+- [generalsvg_gnomad.py](generalsvg_clinvar.py): writes SVG file showing gnomAD variants
+  - [functionsgnomad.py](functionsgnomad.py): various functions used in the generalsvg_gnomad.py program
+- [shapes.py](shapes.py): various functions for writing SVG shapes (used in for both ClinVar and gnomAD)
 ### generalsvg_clinvar:
 
-**Usage:** generalsvg_gnomad.py input destination [-h]
+#### Usage: generalsvg_gnomad.py input destination [-h]
 - input: data file (clinvar_alleles.single.b37.tsv.gz)
 - destination: destination file
 - -h/--help: show help message
 
-**Script will also prompt for:**
+#### Script will also prompt for:
 - UniProt KB accession ID: identifier for protein used to access UniProt/pfam.  For example, COL6A1's is P12109. 
 - NCBI REFSEQ ID: specific to isoform; used to parse data.  Only enter the numbers (omit "NP_").  For example, for COL6A1 (NP_001839), you should enter 001839.
 - Ascending or Descending: note whether the protein is on the positive or negative strand
@@ -38,19 +38,22 @@ In addition, the ClinVar program requires the download of this data file: https:
 - Whether or not to add editable bases
   - if yes, will follow up with prompt to enter file directory
 
-**Notes:**
+#### Notes:
 - When deciding pathogenicity, this script prefers conflicting reports in this order: uncertain > likely pathogenic > pathogenic
+- Destination file must exist ahead of time. The program could be altered to create and write to a new file by deleting `and os.path.isfile(args.destination)` from [this](https://github.com/xjenny2/genetics-svgs-final/blob/75bfab5b1b99c582cc2cf6f4714cd06bf0e926e5/generalsvg_clinvar.py#L13) line of code.
+
 ### generalsvg_gnomad:
 
-**Usage:** generalsvg_gnomad.py destination [-h]
+#### Usage: generalsvg_gnomad.py destination [-h]
 - destination: destination file
 - -h/--help: show help message
 
-**Script will also prompt for:**
+#### Script will also prompt for:
 - Chromosome number
 - Genomic start and end positions
-- UniProt KB accession ID: see above
-- Number/type of domains: see above
+- UniProt KB accession ID: see [above](#script-will-also-prompt-for)
+- Number/type of domains: see [above](#script-will-also-prompt-for)
 
-**Notes:**
+#### Notes:
 - still working on the data parsing (in functionsgnomad.py)--may change in future
+- Destination file must exist ahead of time.  Program could be altered to create + write to a new file by deleting `if os.path.isfile(args.destination:` and `else: print error` from [these](https://github.com/xjenny2/genetics-svgs-final/blob/75bfab5b1b99c582cc2cf6f4714cd06bf0e926e5/generalsvg_gnomad.py#L13) [lines]( of code.

@@ -49,8 +49,8 @@ In addition, the ClinVar program requires the download of this data file: https:
 **Script will also prompt for:**
 - Chromosome number
 - Genomic start and end positions
-- UniProt KB accession ID: see above
-- Number/type of domains: see above
+- UniProt KB accession ID: see [above](#generalsvg_clinvar)
+- Number/type of domains: see [above](#generalsvg_clinvar)
 
 **Notes:**
 - still working on the data parsing (in functionsgnomad.py)--may change in future

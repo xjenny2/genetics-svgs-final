@@ -40,6 +40,8 @@ In addition, the ClinVar program requires the download of this data file: https:
 
 #### Notes:
 - When deciding pathogenicity, this script prefers conflicting reports in this order: uncertain > likely pathogenic > pathogenic
+- Destination file must exist ahead of time. The program could be altered to create and write to a new file by deleting `and os.path.isfile(args.destination)` from [this](https://github.com/xjenny2/genetics-svgs-final/blob/75bfab5b1b99c582cc2cf6f4714cd06bf0e926e5/generalsvg_clinvar.py#L13) line of code.
+
 ### generalsvg_gnomad:
 
 #### Usage: generalsvg_gnomad.py destination [-h]
@@ -54,3 +56,4 @@ In addition, the ClinVar program requires the download of this data file: https:
 
 #### Notes:
 - still working on the data parsing (in functionsgnomad.py)--may change in future
+- Destination file must exist ahead of time.  Program could be altered to create + write to a new file by deleting `if os.path.isfile(args.destination:` and `else: print error` from [these](https://github.com/xjenny2/genetics-svgs-final/blob/75bfab5b1b99c582cc2cf6f4714cd06bf0e926e5/generalsvg_gnomad.py#L13) [lines]( of code.

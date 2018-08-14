@@ -79,7 +79,7 @@ if os.path.isfile(args.destination):
             # key GREEN
             f.write(
                 '\t\t<rect x="20" y="140" width="10" height="10" '
-                'style="fill: #c8ff72; stroke-width:1; stroke: #5d8c15" />\n'
+                'style="fill: #B7E868; stroke-width:1; stroke: #5d8c15" />\n'
             )
             f.write(
                 '\t\t<text text-anchor="start" x="40" y="150" '
@@ -97,7 +97,7 @@ if os.path.isfile(args.destination):
             # key TRIPLE HELICAL
             f.write(
                 '\t\t<rect x="295" y="110" width="10" height="10" '
-                'style="fill: #bfbfbf; stroke-width:1; stroke: #474141" />\n'
+                'style="fill: #cecece; stroke-width:1; stroke: #474141" />\n'
             )
             f.write(
                 '\t\t<text text-anchor="start" x="315" y="120" '
@@ -190,7 +190,7 @@ if os.path.isfile(args.destination):
                         line1 = 488 - (overlaps_pink * 9)
                         f.write(shapes.overlap_triangle(line1, num, fill, stroke))
                 elif sublist[1] <= 0.0025:
-                    fill = '#FFFFAD'  # yellow
+                    fill = '#ffffc4'  # yellow
                     stroke = '#ad7a14'
                     if overlaps_yellow == 0:
                         f.write(shapes.only_triangle(400, num, fill, stroke))
@@ -199,7 +199,7 @@ if os.path.isfile(args.destination):
                         f.write(shapes.overlap_triangle(line1, num, fill, stroke))
 
                 elif 0.0025 < sublist[1] <= 0.01:
-                    fill = '#c8ff72'  # green
+                    fill = '#B7E868'  # green
                     stroke = '#5d8c15'
                     if overlaps_green == 0:
                         f.write(shapes.only_triangle(300, num, fill, stroke))
@@ -223,5 +223,7 @@ if os.path.isfile(args.destination):
 
             f.write('</svg>\n')
             print "Finished"
+else:
+    print "error"
     # 47401651
     # 47424964

@@ -25,12 +25,12 @@ In addition, the ClinVar program requires the download of this data file: https:
 - [shapes.py](shapes.py): various functions for writing SVG shapes (used in for both ClinVar and gnomAD)
 ### generalsvg_clinvar:
 
-**Usage:** generalsvg_gnomad.py input destination [-h]
+#### Usage: generalsvg_gnomad.py input destination [-h]
 - input: data file (clinvar_alleles.single.b37.tsv.gz)
 - destination: destination file
 - -h/--help: show help message
 
-**Script will also prompt for:**
+#### Script will also prompt for:
 - UniProt KB accession ID: identifier for protein used to access UniProt/pfam.  For example, COL6A1's is P12109. 
 - NCBI REFSEQ ID: specific to isoform; used to parse data.  Only enter the numbers (omit "NP_").  For example, for COL6A1 (NP_001839), you should enter 001839.
 - Ascending or Descending: note whether the protein is on the positive or negative strand
@@ -38,19 +38,19 @@ In addition, the ClinVar program requires the download of this data file: https:
 - Whether or not to add editable bases
   - if yes, will follow up with prompt to enter file directory
 
-**Notes:**
+#### Notes:
 - When deciding pathogenicity, this script prefers conflicting reports in this order: uncertain > likely pathogenic > pathogenic
 ### generalsvg_gnomad:
 
-**Usage:** generalsvg_gnomad.py destination [-h]
+#### Usage: generalsvg_gnomad.py destination [-h]
 - destination: destination file
 - -h/--help: show help message
 
-**Script will also prompt for:**
+#### Script will also prompt for:
 - Chromosome number
 - Genomic start and end positions
 - UniProt KB accession ID: see [above](#generalsvg_clinvar)
 - Number/type of domains: see [above](#generalsvg_clinvar)
 
-**Notes:**
+#### Notes:
 - still working on the data parsing (in functionsgnomad.py)--may change in future

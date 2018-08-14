@@ -4,7 +4,7 @@
 The programs in this repository (generalsvg_clinvar.py and generalsvg_gnomad.py) create SVG figures representing the mutations along a given protein.
 
 ### Prerequisites
-These programs use the following Python libraries:
+These programs uses Python 2.7 and the following Python libraries:
 - re
 - pysam *
 - requests *

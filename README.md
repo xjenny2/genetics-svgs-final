@@ -23,7 +23,7 @@ In addition, the ClinVar script requires the download of this data file: https:/
 - [generalsvg_gnomad.py](generalsvg_clinvar.py): writes SVG file showing gnomAD variants
   - [functionsgnomad.py](functionsgnomad.py): various functions used in the generalsvg_gnomad.py program
 - [shapes.py](shapes.py): various functions for writing SVG shapes (used in for both ClinVar and gnomAD)
--[otheroptions.py](otheroptions.py): additional code not in "default" program but which could be useful (currently contains code to add a ccrs percentiles box)
+- [otheroptions.py](otheroptions.py): additional code not in "default" program but which could be useful (currently contains code to add a ccrs percentiles box)
 ### generalsvg_clinvar:
 
 #### Usage: generalsvg_gnomad.py input destination [-h]

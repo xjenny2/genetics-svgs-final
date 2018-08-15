@@ -20,7 +20,7 @@ if os.path.isfile(args.destination):
     startpos = startpos.replace(',', '')
     endpos = raw_input("Genomic End Position: ")
     endpos = endpos.replace(',', '')
-    proteinid = raw_input('Enter Protein Accession ID: ')
+    proteinid = raw_input('Enter UniProtKB ID: ')
     gene_name = fg.genename(proteinid)
 
     # domains
@@ -44,6 +44,7 @@ if os.path.isfile(args.destination):
         print "Writing file..."
         with open(args.destination, 'w') as f:
             f.write('<svg height="1000" width="' + str(length_raw * 3 + 30) + '" xmlns="http://www.w3.org/2000/svg">\n\n')
+            length = int(length_raw) * 3
             # box for key
             f.write('\n<!-- KEY -->\n')
             f.write(
@@ -95,7 +96,6 @@ if os.path.isfile(args.destination):
                 'style = "font-size: 10; font-weight: bold; fill: #474141">Domains</text>\n\n'
             )
             # set up number line + labels + trip helix
-            length = int(length_raw) * 3
             n = 0
             for n in range(0, 4):
                 base = 200 + 100 * n

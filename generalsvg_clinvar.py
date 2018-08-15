@@ -14,7 +14,7 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
     print "All files exist--running program"
 
     # completes url for accessing pfam/uniprot
-    protein_id = raw_input('Enter Protein Accession ID: ')
+    protein_id = raw_input('Enter UniProtKB ID: ')
     gene_name = fc.genename(protein_id)
 
     # isoform
@@ -52,7 +52,6 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
         while os.path.isfile(editfile) is False:
             print "Error: please enter valid path"
             editfile = raw_input("Enter file path: ")
-
     # parse data
     print("Parsing ClinVar data...")
     results = []
@@ -64,6 +63,7 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
         elif order == 'D' or order == 'd':
             results, errors = fc.checkdescending(resultsraw, errors)
         print results
+
         if len(results) == 0:
             print "Error: no results found"
             raise SystemExit
@@ -75,14 +75,14 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
 
                 for error in errors:
                     f.write('<!--' + error + '-->\n')
-
-                f.write('<svg height="500" width="' + str(lengthprotein * 3 + 20)
+                length = lengthprotein * 3
+                f.write('<svg height="500" width="' + str(length + 20)
                         + '" xmlns="http://www.w3.org/2000/svg">\n\n')
 
                 n = 0
                 for n in range(0, 2):
                     height = 100 + 100 * n
-                    length = lengthprotein * 3
+
 
                     # Domain
                     for domain in domainresults:

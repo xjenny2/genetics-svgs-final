@@ -1,8 +1,8 @@
 def rect(height, start, end):
-    return '\t<polygon points="' + str(start) + ',' + str(height - 3) + ' ' \
-           + str(end) + ',' + str(height - 3) + ' ' + str(end) + ',' \
-           + str(height + 3) + ' ' + str(start) + ',' + str(height + 3) \
-           + '" style = "fill: #bfbfbf; fill-opacity: 0.8; stroke: #474141; stroke-width:1" />\n\n'
+    return '\t<polygon points="' + str(start) + ',' + str(height - 6) + ' ' \
+           + str(end) + ',' + str(height - 6) + ' ' + str(end) + ',' \
+           + str(height + 6) + ' ' + str(start) + ',' + str(height + 6) \
+           + '" style = "fill: #cecece; fill-opacity: 0.8; stroke: #969696; stroke-width:1" />\n\n'
 
 
 def triangle(height, position, fill, stroke):

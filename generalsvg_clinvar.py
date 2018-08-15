@@ -94,21 +94,17 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
                     f.write(
                         '\t<line x1="0" y1="' + str(height) + '" x2="' + str(length) + '" y2="' + str(height) + '" '
                         'style="stroke: #000000; stroke-width:2; stroke-linecap: round" />\n'
-                    )
-                    f.write(
+                        
                         '\t<line x1="1" y1="' + str(height - 10) + '" x2="1" y2="' + str(height + 10) + '" '
                         'style="stroke: #000000; stroke-width:2; stroke-linecap: round" />\n'
-                    )
-                    f.write(
+                        
                         '<text text-anchor="start" x="0" y="' + str(height + 30) + '" '
                         'style = "font-size: 12px;">0</text>'
-                    )
-                    f.write(
+                        
                         '\t<line x1="' + str(length + 2) + '" y1="' + str(height - 10)
                         + '" x2="' + str(length+2) + '" y2="' + str(height + 10)
                         + '" style="stroke: #000000; stroke-width:2; stroke-linecap: round" />\n'
-                    )
-                    f.write(
+                        
                         '\t<text text-anchor="end" x="' + str(length + 10) + '" y="' + str(height + 30) + '" '
                         'style = "font-size: 12px;">' + str(length / 3) + '</text>\n\n'
                     )
@@ -159,7 +155,7 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
                             f.write(shapes.triangle(line2, num, fill, stroke))
                             f.write(shapes.line(line2, num, stroke))
                         else:
-                            line2 = 175 - (overlaps_path * 9)
+                            line2 = 178 - (overlaps_path * 9)
                             f.write(shapes.overlap_triangle(line2, num, fill, stroke))
 
                     elif sublist[1] == 0:
@@ -170,10 +166,10 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
                         f.write(shapes.triangle(line1, num, fill, stroke))
                         f.write(shapes.line(line1, num, stroke))
                     elif len(edits_list) != 0:
-                        line1 = 68 - (overlaps * 9)
+                        line1 = 70 - (overlaps * 9)
                         f.write(shapes.overlap_triangle(line1, num, fill, stroke))
                     else:
-                        line1 = 75 - (overlaps * 9)
+                        line1 = 78 - (overlaps * 9)
                         f.write(shapes.overlap_triangle(line1, num, fill, stroke))
 
                 # editable bases

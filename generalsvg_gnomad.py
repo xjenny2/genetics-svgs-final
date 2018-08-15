@@ -50,6 +50,7 @@ if os.path.isfile(args.destination):
                 '\t<rect x="1" y="1" width="560" height="160" '
                 'style="fill: white; stroke-width:1; stroke:rgb(0,0,0)" />\n'
             )
+            # title
             f.write(
                 '\t\t<text text-anchor="middle" x="275" y="35" '
                 'style = "font-size: 30; font-weight: bold; text-decoration: underline;">' + gene_name + ' (gnomAD)</text>\n'
@@ -62,8 +63,6 @@ if os.path.isfile(args.destination):
             f.write(
                 '\t\t<rect x="20" y="80" width="10" height="10" '
                 'style="fill: #FF6D8F; stroke-width:1; stroke: #960c2c" />\n'
-            )
-            f.write(
                 '\t\t<text text-anchor="start" x="40" y="90" '
                 'style = "font-size: 10; font-weight: bold; fill: #FF6D8F">1 Allele Found</text>\n\n'
             )
@@ -71,8 +70,6 @@ if os.path.isfile(args.destination):
             f.write(
                 '\t\t<rect x="20" y="110" width="10" height="10" '
                 'style="fill: #FFFFAD; stroke-width:1; stroke: #ad7a14" />\n'
-            )
-            f.write(
                 '\t\t<text text-anchor="start" x="40" y="120" '
                 'style = "font-size: 10; font-weight: bold; fill: #f2a500">Freq &#x2264; .25%</text>\n\n'
             )
@@ -80,8 +77,6 @@ if os.path.isfile(args.destination):
             f.write(
                 '\t\t<rect x="20" y="140" width="10" height="10" '
                 'style="fill: #B7E868; stroke-width:1; stroke: #5d8c15" />\n'
-            )
-            f.write(
                 '\t\t<text text-anchor="start" x="40" y="150" '
                 'style = "font-size: 10; font-weight: bold; fill: #76c101">.25% &#60; Freq &#x2264; 1%</text>\n\n'
             )
@@ -89,8 +84,6 @@ if os.path.isfile(args.destination):
             f.write(
                 '\t\t<rect x="295" y="80" width="10" height="10" '
                 'style="fill: #91bdff; stroke-width:1; stroke: #004ec4" />\n'
-            )
-            f.write(
                 '\t\t<text text-anchor="start" x="315" y="90" '
                 'style = "font-size: 10; font-weight: bold; fill: #3b87f9">Freq &#x2265; 1%</text>\n\n'
             )
@@ -98,8 +91,6 @@ if os.path.isfile(args.destination):
             f.write(
                 '\t\t<rect x="295" y="110" width="10" height="10" '
                 'style="fill: #cecece; stroke-width:1; stroke: #474141" />\n'
-            )
-            f.write(
                 '\t\t<text text-anchor="start" x="315" y="120" '
                 'style = "font-size: 10; font-weight: bold; fill: #474141">Domains</text>\n\n'
             )
@@ -119,20 +110,16 @@ if os.path.isfile(args.destination):
                 f.write(
                     '\t<line x1="0" y1="' + str(base) + '" x2="' + str(length) + '" y2="' + str(base) + '" '
                     'style="stroke: #000000; stroke-width:2; stroke-linecap: round" />\n'
-                )
-                f.write(
+                                                                                                        
                     '\t<line x1="1" y1="' + str(base - 10) + '" x2="1" y2="' + str(base + 10) + '" '
                     'style="stroke: #000000; stroke-width:2; stroke-linecap: round" />\n'
-                )
-                f.write(
-                    '<text text-anchor="start" x="0" y="' + str(base + 30) + '" '
+                                                                                                
+                    '\t<text text-anchor="start" x="0" y="' + str(base + 30) + '" '
                     'style = "font-size: 12px;">0</text>'
-                )
-                f.write(
+                                                                             
                     '\t<line x1="' + str(length) + '" y1="' + str(base - 10) + '" x2="' + str(length)
-                    + '" y2="' + str(base + 10) + '" style="stroke: #000000; stroke-width:2; stroke-linecap: round" />\n'
-                )
-                f.write(
+                    + '" y2="' + str(base + 10) + '" style="stroke:#000000; stroke-width:2; stroke-linecap: round" />\n'
+                    
                     '\t<text text-anchor="end" x="' + str(length + 20) + '" y="' + str(base + 30) + '" '
                     'style = "font-size: 12px;">' + str(length / 3) + '</text>\n\n'
                 )

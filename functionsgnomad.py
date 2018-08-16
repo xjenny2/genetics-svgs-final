@@ -61,9 +61,7 @@ def readresults(chrom, startpos, endpos):
     intpattern = re.compile(r'[\d.]+(?=e-)')
     intexp = re.compile(r'(?<=e-)[\d]+')  # finds exponent
     csq = re.compile(r'(?<=CSQ=).*')
-    moresevere = re.compile(r'transcript_ablation|splice_acceptor_variant|splice_donor_variant|stop_gained|'
-                            r'frameshift_variant|stop_lost|start_lost|transcript_amplification'
-                            r'|inframe_insertion|inframe_deletion')
+    moresevere = re.compile(r'transcript_ablation|splice_acceptor_variant|splice_donor_variant|stop_gained|frameshift_variant|stop_lost|start_lost|transcript_amplification|inframe_insertion|inframe_deletion')
     missense = re.compile(r'missense_variant')
     records_ex = pysam.TabixFile(
         'https://storage.googleapis.com/gnomad-public/release/2.0.2/vcf/exomes/gnomad.exomes.r2.0.2.sites.vcf.bgz')

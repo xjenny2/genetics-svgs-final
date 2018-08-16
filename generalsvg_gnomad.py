@@ -23,6 +23,11 @@ if os.path.isfile(args.destination):
     proteinid = raw_input('Enter UniProtKB ID: ')
     gene_name = fg.genename(proteinid)
 
+    order = raw_input('Ascending or Descending? (enter A or D): ')
+    while order != 'A' and order != 'D' and order != 'a' and order != 'd':
+        print "Error: please enter A or D"
+        order = raw_input('Ascending or Descending? (enter A or D): ')
+
     # domains
     repeats = raw_input('How many kinds of domains?: ')
     while repeats.isdigit() is False:
@@ -35,8 +40,13 @@ if os.path.isfile(args.destination):
     print 'Length: ' + str(length_raw) + ' amino acids'
 
     print "Parsing gnomAD data..."
-    raw_results = fg.readresults(chrom, startpos, endpos)
-    results, errors = fg.checkascending(raw_results)
+    resultsraw = fg.readresults(chrom, startpos, endpos)
+    for result in resultsraw:
+        print result
+    if order == 'A' or order == 'a':
+        results, errors = fg.checkascending(resultsraw)
+    elif order == 'D' or order == 'd':
+        results, errors = fg.checkdescending(resultsraw)
     if len(results) == 0:
         print "Error: no results found"
         raise SystemExit
@@ -110,16 +120,16 @@ if os.path.isfile(args.destination):
                 f.write(
                     '\t<line x1="0" y1="' + str(base) + '" x2="' + str(length) + '" y2="' + str(base) + '" '
                     'style="stroke: #000000; stroke-width:2; stroke-linecap: round" />\n'
-                                                                                                        
+
                     '\t<line x1="1" y1="' + str(base - 10) + '" x2="1" y2="' + str(base + 10) + '" '
                     'style="stroke: #000000; stroke-width:2; stroke-linecap: round" />\n'
-                                                                                                
+
                     '\t<text text-anchor="start" x="0" y="' + str(base + 30) + '" '
                     'style = "font-size: 12px;">0</text>'
-                                                                             
+
                     '\t<line x1="' + str(length) + '" y1="' + str(base - 10) + '" x2="' + str(length)
                     + '" y2="' + str(base + 10) + '" style="stroke:#000000; stroke-width:2; stroke-linecap: round" />\n'
-                    
+
                     '\t<text text-anchor="end" x="' + str(length + 20) + '" y="' + str(base + 30) + '" '
                     'style = "font-size: 12px;">' + str(length / 3) + '</text>\n\n'
                 )

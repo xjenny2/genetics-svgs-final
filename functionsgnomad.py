@@ -54,65 +54,98 @@ def readresults(chrom, startpos, endpos):
         r'(?<=p\.[A-Z][a-z][a-z])\d+(?=[A-Z][a-z][a-z]\|)'
         # searches for NP_######.#:p.XXX[Location]XXX"
     )
-    sci_not = re.compile(r'AF=\d+\.\d+e-\d+')
-    allelect_pat = re.compile(r'(?<=AC=)\d')
-    allelefreq_2 = re.compile(r'(?<=AF=)[\d.]$')
-    intpattern = re.compile(r'(?<=AF=)[\d.]+(?=e-)')
+    filterpass = re.compile(r'(?<=AS_FilterStatus=)((?:PASS|,)+$)')
+    sci_not = re.compile(r'\d+\.\d+e-\d+')
+    allelect_pat = re.compile(r'(?<=^AC=)[\d,]+')
+    allelefreq_pat = re.compile(r'(?<=AF=).+')
+    intpattern = re.compile(r'[\d.]+(?=e-)')
     intexp = re.compile(r'(?<=e-)[\d]+')  # finds exponent
-    synonymous = re.compile(r'synonymous_variant|UTR|intron_variant|frameshift|inframe_deletion|inframe_insertion')
-    records = pysam.TabixFile(
-        'https://storage.googleapis.com/gnomad-public/release/2.0.2/vcf/genomes/gnomad.genomes.r2.0.2.'
-        'sites.chr' + str(chrom) + '.vcf.bgz')
-    frequency = None
-    final_results = []
-    raw_results = []
-    for record in records.fetch(str(chrom), int(startpos), int(endpos)):
-        values = re.split('[\t;]', record)
-        raw_results.append(values)
-    for result in raw_results:
-        if result[5] == 'PASS' or result[6] == 'PASS':
-            allelect = int(str(allelect_pat.findall(result[7]))[2:-2])
-            if allelect == 1:
-                frequency = 2
-            elif sci_not.search(result[8]):
-                number = sci_not.search(result[8]).group(0)
-                basenum = float(str(intpattern.findall(number))[2:-2])
-                exponent = float(str(intexp.findall(number))[2:-2])
-                frequency = basenum * 10 ** (-exponent)
-            elif allelefreq_2.search(result[8]):
-                frequency = float(str(allelefreq_2.search(result[8]).group(0))[2:-2])
-            for item in result:
-                if location_pat.search(item) and not synonymous.search(item):
-                    location = int(str(location_pat.search(item).group(0)))
-                    finalresult = [location, frequency]
-                    final_results.append(finalresult)
+    csq = re.compile(r'(?<=CSQ=).*')
+    moresevere = re.compile(r'transcript_ablation|splice_acceptor_variant|splice_donor_variant|stop_gained|'
+                            r'frameshift_variant|stop_lost|start_lost|transcript_amplification'
+                            r'|inframe_insertion|inframe_deletion')
+    missense = re.compile(r'missense_variant')
     records_ex = pysam.TabixFile(
         'https://storage.googleapis.com/gnomad-public/release/2.0.2/vcf/exomes/gnomad.exomes.r2.0.2.sites.vcf.bgz')
     raw_results_ex = []
-    frequency_ex = None
     final_results_ex = []
     for record in records_ex.fetch(str(chrom), int(startpos), int(endpos)):
         values_ex = re.split('[\t;]', record)
         raw_results_ex.append(values_ex)
     for result in raw_results_ex:
-        if result[5] == 'PASS' or result[6] == 'PASS':
-            allelect = int(str(allelect_pat.findall(result[7]))[2:-2])
-            if allelect == 1:
-                frequency_ex = 2
-            elif sci_not.search(result[8]):
-                number = sci_not.search(result[8]).group(0)
-                basenum = float(str(intpattern.findall(number))[2:-2])
-                exponent = float(str(intexp.findall(number))[2:-2])
-                frequency_ex = basenum * 10 ** (-exponent)
-            for item in result:
-                if location_pat.search(item) and not synonymous.search(item):
-                    location_ex = int(str(location_pat.search(item).group(0)))
-                    finalresult_ex = [location_ex, frequency_ex]
-                    final_results_ex.append(finalresult_ex)
-    for result in final_results_ex:
-        final_results.append(result)
-    final_results = sorted(final_results)
-    return final_results
+        allelect = None
+        allelefreq = None
+        filter_result = False
+        csq_list = []
+        for item in result:
+            if allelect_pat.search(item):
+                allelect = allelect_pat.search(item).group(0)
+            if allelefreq_pat.search(item):
+                allelefreq = allelefreq_pat.search(item).group(0)
+            if filterpass.search(item):
+                filter_result = True
+            if csq.search(item):
+                csqtext = csq.search(item).group(0)
+                csqlistraw = csqtext.split(",")
+                for csqitem in csqlistraw:
+                    if location_pat.search(csqitem) and missense.search(csqitem) and not moresevere.search(csqitem):
+                        location_ex = int(str(location_pat.search(csqitem).group(0)))
+                    else:
+                        location_ex = None
+                    csq_list.append(location_ex)
+        if filter_result is True:
+            if len(csq_list) != 0 and allelefreq is not None:
+                aclist = allelect.split(',')
+                for index, count in enumerate(aclist):
+                    if int(count) == 0:
+                        del aclist[index]
+                frequencies = sci_not.findall(allelefreq)
+                frequency_list = []
+                for index, item in enumerate(aclist):
+                    if int(item) == 1:
+                        frequency_ex = 2
+                    else:
+                        basenum = float(str(intpattern.search(frequencies[index]).group(0)))
+                        exponent = float(str(intexp.search(frequencies[index]).group(0)))
+                        frequency_ex = basenum * 10 ** (-exponent)
+                    frequency_list.append(frequency_ex)
+                for num, frequency in enumerate(frequency_list):
+                    if csq_list[num] is not None:
+                        finalresult_ex = [csq_list[num], frequency]
+                        final_results_ex.append(finalresult_ex)
+    return final_results_ex
+
+
+            # location_ex = None
+
+
+            # frequency_ex = None
+    #         for item in result:
+    #             if csq.search(item):
+    #                 csqtext = csq.search(item).group(0)
+    #                 if location_pat.search(csqtext) and missense.search(csqtext) and not moresevere.search(csqtext):
+    #     #                     location_ex = int(str(location_pat.search(csqtext).group(0)))
+    #                     print location_ex
+    #         frequency_list = []
+    #         allelect = int(str(allelect_pat.findall(result[7]))[2:-2])
+    #         if allelect == 1:
+    #             frequency_list = [2]
+    #         elif allelefreq.search(result[8]):
+    #             allele_freq = allelefreq.search(result[8]).group(0)
+    #             frequencies = sci_not.findall(allele_freq)
+    #             print frequencies
+    #             for frequency in frequencies:
+    #                 basenum = float(str(intpattern.search(frequency).group(0)))
+    #                 exponent = float(str(intexp.search(frequency).group(0)))
+    #                 frequency_ex = basenum * 10 ** (-exponent)
+    #                 frequency_list.append(frequency_ex)
+    #         if location_ex is not None and frequency_ex is not None:
+    #             for item in frequency_list:
+    #                 finalresult_ex = [location_ex, item]
+    #                 final_results_ex.append(finalresult_ex)
+    #                 print finalresult_ex
+    #
+    # return final_results_ex
 
 
 # checks for ascending

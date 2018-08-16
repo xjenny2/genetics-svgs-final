@@ -1,10 +1,10 @@
 # README
 
 ## Getting Started
-The programs in this repository (generalsvg_clinvar.py and generalsvg_gnomad.py) create SVG figures representing the mutations along a given protein.
+The scripts in this repository (generalsvg_clinvar.py and generalsvg_gnomad.py) create SVG figures representing the mutations along a given protein.
 
 ### Prerequisites
-These programs uses Python 2.7 and the following Python libraries:
+These scripts use Python 2.7 and the following Python libraries:
 - re
 - pysam *
 - requests *
@@ -14,7 +14,7 @@ These programs uses Python 2.7 and the following Python libraries:
 - csv 
 - lxml * (other html parsers might work, but no guarantees)
 Packages with a * must be installed first.
-In addition, the ClinVar program requires the download of this data file: https://github.com/macarthur-lab/clinvar/blob/master/output/b37/single/clinvar_alleles.single.b37.tsv.gz.  Certain features (such as marking editable bases) require the user to have those files as well.
+In addition, the ClinVar script requires the download of this data file: https://github.com/macarthur-lab/clinvar/blob/master/output/b37/single/clinvar_alleles.single.b37.tsv.gz.  Certain features (such as marking editable bases or adding a ccrs percentiles box) require the user to have those files as well.
 
 ## Programs
 ### Contents
@@ -23,6 +23,7 @@ In addition, the ClinVar program requires the download of this data file: https:
 - [generalsvg_gnomad.py](generalsvg_clinvar.py): writes SVG file showing gnomAD variants
   - [functionsgnomad.py](functionsgnomad.py): various functions used in the generalsvg_gnomad.py program
 - [shapes.py](shapes.py): various functions for writing SVG shapes (used in for both ClinVar and gnomAD)
+- [otheroptions.py](otheroptions.py): additional code not in "default" program but which could be useful (currently contains code to add a ccrs percentiles box)
 ### generalsvg_clinvar:
 
 #### Usage: generalsvg_gnomad.py input destination [-h]
@@ -39,8 +40,9 @@ In addition, the ClinVar program requires the download of this data file: https:
   - if yes, will follow up with prompt to enter file directory
 
 #### Notes:
-- When deciding pathogenicity, this script prefers conflicting reports in this order: uncertain > likely pathogenic > pathogenic
-- As it is, the destination file must exist before running program for program to work (otherwise, will print error message and quit). The program could be altered to create and write to a new file by deleting `and os.path.isfile(args.destination)` from [this](https://github.com/xjenny2/genetics-svgs-final/blob/75bfab5b1b99c582cc2cf6f4714cd06bf0e926e5/generalsvg_clinvar.py#L13) line of code.
+- When deciding pathogenicity, this script prefers conflicting reports in this order: uncertain > likely pathogenic > pathogenic.  If a variant is both benign and uncertain, it is considered uncertain; variants that are only benign/likely benign are not included in the figure.
+  - This is because the ranking system is coded so that if there are ANY "uncertain" reports, it is considered uncertain; if there is a likely pathogenic report and no uncertain reports, it is likely pathogenic, and so on.
+- As it is, the destination file must exist before running script (otherwise, will print error message and quit). The code could be altered to create and write to a new file by deleting `and os.path.isfile(args.destination)` from [this](https://github.com/xjenny2/genetics-svgs-final/blob/75bfab5b1b99c582cc2cf6f4714cd06bf0e926e5/generalsvg_clinvar.py#L13) line of code.
 
 ### generalsvg_gnomad:
 
@@ -56,7 +58,16 @@ In addition, the ClinVar program requires the download of this data file: https:
 
 #### Notes:
 - still working on the data parsing (in functionsgnomad.py)--may change in future
-- Destination file must exist ahead of time.  Program could be altered to create + write to a new file by deleting `if os.path.isfile(args.destination:` and `else: print error` from [these](https://github.com/xjenny2/genetics-svgs-final/blob/75bfab5b1b99c582cc2cf6f4714cd06bf0e926e5/generalsvg_gnomad.py#L13) [lines](https://github.com/xjenny2/genetics-svgs-final/blob/698da93c3bceda3f2280dd4ae8d22658e40080c0/generalsvg_gnomad.py#L226) of code and then unindenting the code block.
+- Destination file must exist ahead of time.  Code could be altered to create + write to a new file by deleting `if os.path.isfile(args.destination:` and `else: print error` from [these](https://github.com/xjenny2/genetics-svgs-final/blob/75bfab5b1b99c582cc2cf6f4714cd06bf0e926e5/generalsvg_gnomad.py#L13) [lines](https://github.com/xjenny2/genetics-svgs-final/blob/698da93c3bceda3f2280dd4ae8d22658e40080c0/generalsvg_gnomad.py#L226) of code and then unindenting the code block.
+- currently only uses exome data variants.
+- Passing variants are considered to be those variants that have all "PASS"es in that entry's AS_FilterStatus category; if there is, for example, one pass and one fail, the entire entry is disregarded.
+
+
+### otheroptions:
+Not a standalone script; rather, a dump for bits of code that could be added to the generalsvg_gnomad or generalsvg_clinvar programs to implement additional features.  
+
+#### Contents:
+- ccrs percentiles: follow instructions to add a box that depicts ccrs percentiles on a scale from 0-100% (blue-red respectively).  See [clinvar_col6A1ccrs.py](https://github.com/xjenny2/genetics-svgs/blob/master/venv/clinvar6a1ccrs.py) from the genetics-svgs repo for a working example.
 
 ## Future Work
 - Better system for categorizing ClinVar variants with conflicting reports

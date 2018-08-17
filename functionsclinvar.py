@@ -48,16 +48,15 @@ def domains(repeats, proteinid):  # number of domains, protein id
 
 
 # parse general results from clinvar
-def readresults(table, gene_name, reference_id): # data source, name of gene, NP ID
+def readresults(table, gene_name, reference_id):  # data source, name of gene, NCBI ID
     resultsraw = []
     errors = []
     location_pat = re.compile(
         r'(?<=NP_\d{%d}\.\d:p\.[A-Z][a-z][a-z])\d+(?=[A-Z][a-z]{2}$)' % len(reference_id)
-        # searches for NP_######.#:p.XXX[Location]XXX"
-    )
-    protein_pat = re.compile(r'(?<=NP_)\d{%d}' % len(reference_id))  # NP ID from data
-    glypattern = re.compile(r'(?<=p.Gly)\d+(?=[A-Z][a-z]+)')
-    terpattern = re.compile(r'(?<=p.[A-Z][a-z]{2})\d+(?=Ter)')
+    )  # searches for NP_######.#:p.XXX[Location]XXX"
+    protein_pat = re.compile(r'(?<=NP_)\d{%d}' % len(reference_id))  # NCBI ID from data
+    glypattern = re.compile(r'(?<=p.Gly)\d+(?=[A-Z][a-z]+)')  # gly substitutions
+    terpattern = re.compile(r'(?<=p.[A-Z][a-z]{2})\d+(?=Ter)')  # nonsense mutations
     for row in table:
         gene = row["symbol"]
         pathogenic = row["pathogenic"]

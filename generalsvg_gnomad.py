@@ -98,19 +98,18 @@ if os.path.isfile(args.destination):
                 '\t\t<text text-anchor="start" x="315" y="90" '
                 'style = "font-size: 10; font-weight: bold; fill: #3b87f9">Freq &#x2265; 1%</text>\n\n'
             )
-            # key TRIPLE HELICAL
+            # key DOMAINS
             f.write(
                 '\t\t<rect x="295" y="110" width="10" height="10" '
                 'style="fill: #cecece; stroke-width:1; stroke: #474141" />\n'
                 '\t\t<text text-anchor="start" x="315" y="120" '
                 'style = "font-size: 10; font-weight: bold; fill: #474141">Domains</text>\n\n'
             )
-            # set up number line + labels + trip helix
+            # set up number line + labels + domains
             n = 0
             for n in range(0, 4):
                 base = 200 + 100 * n
-                # triple helical region
-                f.write('\n<!-- TRIPLE HELICAL REGION -->\n')
+                # domains
                 for domain in domainresults:
                     f.write('\n<!-- Domain -->\n')
                     f.write(shapes.rect(base, domain[0] * 3 - 1, domain[1] * 3 - 1))
@@ -149,15 +148,14 @@ if os.path.isfile(args.destination):
             f.write('\n<!-- MARKERS -->\n')
             list_location = []
             list_location_blue = []
-            list_location_green = []
+            list_location_green_blue = []
             list_location_yellow = []
             list_location_pink = []
             for sublist in results:
                 print sublist
                 num = sublist[0]
                 overlaps = 0
-                # overlaps_blue = 0
-                overlaps_green = 0
+                overlaps_green_blue = 0
                 overlaps_yellow = 0
                 overlaps_pink = 0
 
@@ -170,19 +168,16 @@ if os.path.isfile(args.destination):
                     overlaps_yellow = fg.checkoverlaps(num, list_location_yellow, overlaps_yellow)
                     list_location_yellow.append(num)
                 elif 0.0025 < sublist[1] < 2:
-                    overlaps_green = fg.checkoverlaps(num, list_location_green, overlaps_green)
-                    list_location_green.append(num)
-                # elif 0.01 < sublist[1] < 2:
-                #     overlaps_blue = fg.checkoverlaps(num, list_location_blue, overlaps_blue)
-                #     list_location_blue.append(num)
+                    overlaps_green_blue = fg.checkoverlaps(num, list_location_green_blue, overlaps_green_blue)
+                    list_location_green_blue.append(num)
 
                 fill = ''
                 stroke = ''
                 if sublist[1] == 2:
-                    fill = '#FF6D8F'  # red
+                    fill = '#FF6D8F'  # pink
                     stroke = '#960c2c'
                     if overlaps_pink == 0:
-                        f.write(shapes.only_triangle(500, num, fill, stroke))
+                        f.write(shapes.only_triangle(500, num, fill, stroke))  # write on pink only line
                     else:
                         line1 = 488 - (overlaps_pink * 9)
                         f.write(shapes.overlap_triangle(line1, num, fill, stroke))
@@ -198,20 +193,20 @@ if os.path.isfile(args.destination):
                 elif 0.0025 < sublist[1] <= 0.01:
                     fill = '#B7E868'  # green
                     stroke = '#5d8c15'
-                    if overlaps_green == 0:
+                    if overlaps_green_blue == 0:
                         f.write(shapes.only_triangle(300, num, fill, stroke))
                     else:
-                        line1 = 288 - (overlaps_green * 9)
+                        line1 = 288 - (overlaps_green_blue * 9)
                         f.write(shapes.overlap_triangle(line1, num, fill, stroke))
                 elif 0.01 < sublist[1] < 2:
                     fill = '#91bdff'  # blue
                     stroke = '#004ec4'
-                    if overlaps_green == 0:
+                    if overlaps_green_blue == 0:
                         f.write(shapes.only_triangle(300, num, fill, stroke))
                     else:
-                        line1 = 288 - (overlaps_green * 9)
+                        line1 = 288 - (overlaps_green_blue * 9)
                         f.write(shapes.overlap_triangle(line1, num, fill, stroke))
-
+                # write on first line (everything)
                 if overlaps == 0:
                     f.write(shapes.only_triangle(200, num, fill, stroke))
                 else:

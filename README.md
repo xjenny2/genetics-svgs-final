@@ -72,6 +72,7 @@ Not a standalone script; rather, a dump for bits of code that could be added to 
 ## Future Work
 - Better ways to deal with different isoforms
 - Minimizing number of user raw_inputs needed
+  - automatic checking of ascending/descending?
 - refinement of gnomAD parsing/sorting system
   - wider range of annotations--include splice sites and frameshifts?
   - consider variants in each entry separately when it comes to filters; that is, attach each filter value to its corresponding variant so that as long as that particular variant passes the filter, it is included

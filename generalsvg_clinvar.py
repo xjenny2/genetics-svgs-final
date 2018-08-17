@@ -84,7 +84,8 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
                 # title
                 f.write(
                     '\t\t<text text-anchor="middle" x="275" y="25" '
-                    'style = "font-size: 20; font-weight: bold; text-decoration: underline;">' + gene_name + ' (ClinVar)</text>\n'
+                    'style = "font-size: 20; font-weight: bold; text-decoration: underline;">' + gene_name
+                    + ' (ClinVar)</text>\n'
                 )
                 f.write(
                     '\t\t<text text-anchor="start" x="20" y="45" '

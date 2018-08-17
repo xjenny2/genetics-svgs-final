@@ -17,7 +17,6 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
     protein_id = raw_input('Enter UniProtKB ID: ')
     gene_name = fc.genename(protein_id)
 
-    # isoform
     refseq_id = raw_input('Enter NCBI REFSEQ # (NP_###): ')
 
     # for checking ascending/descending later
@@ -31,7 +30,8 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
     while repeats.isdigit() is False:
         print "Error: not a number"
         repeats = raw_input('How many kinds of domains? ')
-    # prints out info for check
+
+    # prints out info to check
     domainresults, lengthprotein = fc.domains(repeats, protein_id)
     print 'Gene: ' + gene_name
     print 'Length: ' + str(lengthprotein) + ' amino acids'
@@ -52,6 +52,7 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
         while os.path.isfile(editfile) is False:
             print "Error: please enter valid path"
             editfile = raw_input("Enter file path: ")
+
     # parse data
     print("Parsing ClinVar data...")
     results = []
@@ -67,22 +68,17 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
         if len(results) == 0:
             print "Error: no results found"
             raise SystemExit
-
         else:
-
             print 'Writing file...'
             with open(args.destination, 'w') as f:
-
                 for error in errors:
                     f.write('<!--' + error + '-->\n')
                 length = lengthprotein * 3
                 f.write('<svg height="500" width="' + str(length + 20)
                         + '" xmlns="http://www.w3.org/2000/svg">\n\n')
-
                 n = 0
                 for n in range(0, 2):
                     height = 100 + 100 * n
-
 
                     # Domain
                     for domain in domainresults:
@@ -128,40 +124,36 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
                 for sublist in results:
                     overlaps = 0
                     overlaps_path = 0
-
                     num = sublist[0]
+                    fill = ""
+                    stroke = ""
+                    line1 = 100
+                    line2 = 200
+
                     overlaps = fc.checkoverlaps(num, list_location, overlaps)
                     list_location.append(num)
                     if sublist[1] != 0:
                         overlaps_path = fc.checkoverlaps(num, list_location_path, overlaps_path)
                         list_location_path.append(num)
-                    fill = ""
-                    stroke = ""
-                    line1 = 100
-                    line2 = 200
+
                     if sublist[1] == 2 or sublist[1] == 1:
                         fill = '#FF6D8F'  # red
                         stroke = '#960c2c'
-
                         if sublist[2] == 2:  # nonsense
                             fill = '#FFFF8E'  # yellow
                             stroke = '#ffaa00'
-
                         elif sublist[2] == 1:  # gly
                             fill = '#91bdff'  # blue
                             stroke = '#004ec4'
-
                         if overlaps_path == 0:
                             f.write(shapes.triangle(line2, num, fill, stroke))
                             f.write(shapes.line(line2, num, stroke))
                         else:
                             line2 = 178 - (overlaps_path * 9)
                             f.write(shapes.overlap_triangle(line2, num, fill, stroke))
-
                     elif sublist[1] == 0:
                         fill = '#c8ff72'  # green
                         stroke = '#5d8c15'
-
                     if overlaps == 0:
                         f.write(shapes.triangle(line1, num, fill, stroke))
                         f.write(shapes.line(line1, num, stroke))

@@ -14,7 +14,7 @@ def ccrs(reader):
     return ccrslist
 
 
-# add this to generalsvg before opening destination file
+# add this to generalsvg before opening of destination file
 with open('YOUR-FILE') as tsv:
     ccrsfile = csv.reader(tsv, delimiter="\t")
     ccrslist = fc.ccrs(ccrsfile)

@@ -50,19 +50,21 @@ def domains(repeats, reference_id):  # number of domains, refseq id
 
 # parses data from tabix master file
 def readresults(chrom, startpos, endpos):
-    location_pat = re.compile(
-        r'(?<=p\.[A-Z][a-z][a-z])\d+(?=[A-Z][a-z][a-z]\|)'
-        # searches for NP_######.#:p.XXX[Location]XXX"
-    )
-    filterpass = re.compile(r'(?<=AS_FilterStatus=)((?:PASS|,)+$)')
-    sci_not = re.compile(r'\d+\.\d+e-\d+')
-    allelect_pat = re.compile(r'(?<=^AC=)[\d,]+')
-    allelefreq_pat = re.compile(r'(?<=AF=).+')
-    intpattern = re.compile(r'[\d.]+(?=e-)')
+    location_pat = re.compile(r'(?<=p\.[A-Z][a-z][a-z])\d+(?=[A-Z][a-z][a-z]\|)') # searches for "p.XXX[Location]XXX|"
+    filterpass = re.compile(r'(?<=AS_FilterStatus=)((?:PASS|,)+$)') # searches for "AS_FilterStatus=[all PASSes]"
+    allelect_pat = re.compile(r'(?<=^AC=)[\d,]+')  # checks for allele category
+    allelefreq_pat = re.compile(r'(?<=AF=).+')  # checks for allele freq category
+    csq = re.compile(r'(?<=CSQ=).*')  # checks for scq category
+    sci_not = re.compile(r'\d+\.\d+e-\d+')  # scientific notation setup
+    intpattern = re.compile(r'[\d.]+(?=e-)')  # just the base of the sci notation
     intexp = re.compile(r'(?<=e-)[\d]+')  # finds exponent
-    csq = re.compile(r'(?<=CSQ=).*')
-    moresevere = re.compile(r'transcript_ablation|splice_acceptor_variant|splice_donor_variant|stop_gained|frameshift_variant|stop_lost|start_lost|transcript_amplification|inframe_insertion|inframe_deletion')
-    missense = re.compile(r'missense_variant')
+    moresevere = re.compile(r'transcript_ablation|splice_acceptor_variant|splice_donor_variant|'
+                            r'stop_gained|frameshift_variant|stop_lost|start_lost|transcript_amplification|'
+                            r'inframe_insertion|inframe_deletion')  # checks for annotations more severe than missense
+    missense = re.compile(r'missense_variant')  # checks for missense annotations
+    
+    # if we want to integrate genome data set could just copy + paste everything from below this point again,
+    # replace w/ new lists/variables then combine the two final lists
     records_ex = pysam.TabixFile(
         'https://storage.googleapis.com/gnomad-public/release/2.0.2/vcf/exomes/gnomad.exomes.r2.0.2.sites.vcf.bgz')
     raw_results_ex = []
@@ -74,8 +76,9 @@ def readresults(chrom, startpos, endpos):
         allelect = None
         allelefreq = None
         filter_result = False
-        csq_list = []
+        location_list = []
         for item in result:
+            # find the relevant section of the entry
             if allelect_pat.search(item):
                 allelect = allelect_pat.search(item).group(0)
             if allelefreq_pat.search(item):
@@ -84,22 +87,23 @@ def readresults(chrom, startpos, endpos):
                 filter_result = True
             if csq.search(item):
                 csqtext = csq.search(item).group(0)
-                csqlistraw = csqtext.split(",")
+                csqlistraw = csqtext.split(",")  # split into individual variants
                 for csqitem in csqlistraw:
+                    # checks that annotation IS "missense" and IS NOT anything ranked more severe than "missense"
                     if location_pat.search(csqitem) and missense.search(csqitem) and not moresevere.search(csqitem):
                         location_ex = int(str(location_pat.search(csqitem).group(0)))
                     else:
                         location_ex = None
-                    csq_list.append(location_ex)
+                    location_list.append(location_ex)
         if filter_result is True:
-            if len(csq_list) != 0 and allelefreq is not None:
-                aclist = allelect.split(',')
-                for index, count in enumerate(aclist):
-                    if int(count) == 0:
-                        del aclist[index]
+            if len(location_list) != 0 and allelefreq is not None:
+                aclist = allelect.split(',')  # split into allele counts for each variant
+                # for index, count in enumerate(aclist): # shouldn't be necessary because ACO variants don't pass filter
+                #     if int(count) == 0:
+                #         del aclist[index]
                 frequencies = sci_not.findall(allelefreq)
                 frequency_list = []
-                for index, item in enumerate(aclist):
+                for index, item in enumerate(aclist):  # combine info corresponding to each variant from the 3 lists
                     if int(item) == 1:
                         frequency_ex = 2
                     else:
@@ -108,42 +112,10 @@ def readresults(chrom, startpos, endpos):
                         frequency_ex = basenum * 10 ** (-exponent)
                     frequency_list.append(frequency_ex)
                 for num, frequency in enumerate(frequency_list):
-                    if csq_list[num] is not None:
-                        finalresult_ex = [csq_list[num], frequency]
+                    if location_list[num] is not None:
+                        finalresult_ex = [location_list[num], frequency]
                         final_results_ex.append(finalresult_ex)
     return final_results_ex
-
-
-            # location_ex = None
-
-
-            # frequency_ex = None
-    #         for item in result:
-    #             if csq.search(item):
-    #                 csqtext = csq.search(item).group(0)
-    #                 if location_pat.search(csqtext) and missense.search(csqtext) and not moresevere.search(csqtext):
-    #     #                     location_ex = int(str(location_pat.search(csqtext).group(0)))
-    #                     print location_ex
-    #         frequency_list = []
-    #         allelect = int(str(allelect_pat.findall(result[7]))[2:-2])
-    #         if allelect == 1:
-    #             frequency_list = [2]
-    #         elif allelefreq.search(result[8]):
-    #             allele_freq = allelefreq.search(result[8]).group(0)
-    #             frequencies = sci_not.findall(allele_freq)
-    #             print frequencies
-    #             for frequency in frequencies:
-    #                 basenum = float(str(intpattern.search(frequency).group(0)))
-    #                 exponent = float(str(intexp.search(frequency).group(0)))
-    #                 frequency_ex = basenum * 10 ** (-exponent)
-    #                 frequency_list.append(frequency_ex)
-    #         if location_ex is not None and frequency_ex is not None:
-    #             for item in frequency_list:
-    #                 finalresult_ex = [location_ex, item]
-    #                 final_results_ex.append(finalresult_ex)
-    #                 print finalresult_ex
-    #
-    # return final_results_ex
 
 
 # checks for ascending

@@ -58,9 +58,9 @@ In addition, the ClinVar script requires the download of this data file: https:/
 
 #### Notes:
 - still working on the data parsing (in functionsgnomad.py)--may change in future
+  - currently only takes exome missense variants
+  - currently only considers tabix entries for which all AS_FilterStatus values are PASS (if there's two variants in an entry, and one is PASS and one isn't, the entire entry is discarded)
 - Destination file must exist ahead of time.  Code could be altered to create + write to a new file by deleting `if os.path.isfile(args.destination:` and `else: print error` from [these](https://github.com/xjenny2/genetics-svgs-final/blob/75bfab5b1b99c582cc2cf6f4714cd06bf0e926e5/generalsvg_gnomad.py#L13) [lines](https://github.com/xjenny2/genetics-svgs-final/blob/698da93c3bceda3f2280dd4ae8d22658e40080c0/generalsvg_gnomad.py#L226) of code and then unindenting the code block.
-- currently only uses exome data variants.
-- Passing variants are considered to be those variants that have all "PASS"es in that entry's AS_FilterStatus category; if there is, for example, one pass and one fail, the entire entry is disregarded.
 
 
 ### otheroptions:
@@ -70,6 +70,9 @@ Not a standalone script; rather, a dump for bits of code that could be added to 
 - ccrs percentiles: follow instructions to add a box that depicts ccrs percentiles on a scale from 0-100% (blue-red respectively).  See [clinvar_col6A1ccrs.py](https://github.com/xjenny2/genetics-svgs/blob/master/venv/clinvar6a1ccrs.py) from the genetics-svgs repo for a working example.
 
 ## Future Work
-- Better system for categorizing ClinVar variants with conflicting reports
 - Better ways to deal with different isoforms
 - Minimizing number of user raw_inputs needed
+- refinement of gnomAD parsing/sorting system
+  - wider range of annotations--include splice sites and frameshifts?
+  - consider variants in each entry separately when it comes to filters; that is, attach each filter value to its corresponding variant so that as long as that particular variant passes the filter, it is included
+  - possible integration of genome data set?

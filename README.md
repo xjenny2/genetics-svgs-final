@@ -13,7 +13,9 @@ These scripts use Python 2.7 and the following Python libraries:
 - argparse *
 - csv 
 - lxml * (other html parsers might work, but no guarantees)
+
 Packages with a * must be installed first.
+
 In addition, the ClinVar script requires the download of this data file: https://github.com/macarthur-lab/clinvar/blob/master/output/b37/single/clinvar_alleles.single.b37.tsv.gz.  Certain features (such as marking editable bases or adding a ccrs percentiles box) require the user to have those files as well.
 
 ## Programs

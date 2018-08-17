@@ -76,9 +76,60 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
                 length = lengthprotein * 3
                 f.write('<svg height="500" width="' + str(length + 20)
                         + '" xmlns="http://www.w3.org/2000/svg">\n\n')
+                f.write('\n<!-- KEY -->\n')
+                f.write(
+                    '\t<rect x="1" y="1" width="560" height="140" '
+                    'style="fill: white; stroke-width:1; stroke:rgb(0,0,0)" />\n'
+                )
+                # title
+                f.write(
+                    '\t\t<text text-anchor="middle" x="275" y="25" '
+                    'style = "font-size: 20; font-weight: bold; text-decoration: underline;">' + gene_name
+                    + ' (ClinVar)</text>\n'
+                )
+                f.write(
+                    '\t\t<text text-anchor="start" x="20" y="45" '
+                    'style = "font-size: 10">Key:</text>\n\n'
+                )
+                # key PINK
+                f.write(
+                    '\t\t<rect x="20" y="60" width="10" height="10" '
+                    'style="fill: #FF6D8F; stroke-width:1; stroke: #960c2c" />\n'
+                    '\t\t<text text-anchor="start" x="40" y="70" '
+                    'style = "font-size: 10; font-weight: bold; fill: #FF6D8F">Pathogenic</text>\n\n'
+                )
+                # key YELLOW
+                f.write(
+                    '\t\t<rect x="20" y="90" width="10" height="10" '
+                    'style="fill: #FFFFAD; stroke-width:1; stroke: #ad7a14" />\n'
+                    '\t\t<text text-anchor="start" x="40" y="100" '
+                    'style = "font-size: 10; font-weight: bold; fill: #f2a500">Nonsense</text>\n\n'
+                )
+                # key GREEN
+                f.write(
+                    '\t\t<rect x="20" y="120" width="10" height="10" '
+                    'style="fill: #B7E868; stroke-width:1; stroke: #5d8c15" />\n'
+                    '\t\t<text text-anchor="start" x="40" y="130" '
+                    'style = "font-size: 10; font-weight: bold; fill: #76c101">Uncertain</text>\n\n'
+                )
+                # key BLUE
+                f.write(
+                    '\t\t<rect x="295" y="60" width="10" height="10" '
+                    'style="fill: #91bdff; stroke-width:1; stroke: #004ec4" />\n'
+                    '\t\t<text text-anchor="start" x="315" y="70" '
+                    'style = "font-size: 10; font-weight: bold; fill: #3b87f9">Gly</text>\n\n'
+                )
+                # key DOMAINS
+                f.write(
+                    '\t\t<rect x="295" y="90" width="10" height="10" '
+                    'style="fill: #cecece; stroke-width:1; stroke: #474141" />\n'
+                    '\t\t<text text-anchor="start" x="315" y="100" '
+                    'style = "font-size: 10; font-weight: bold; fill: #474141">Domains</text>\n\n'
+                )
+
                 n = 0
                 for n in range(0, 2):
-                    height = 100 + 100 * n
+                    height = 200 + 100 * n
 
                     # Domain
                     for domain in domainresults:
@@ -127,8 +178,8 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
                     num = sublist[0]
                     fill = ""
                     stroke = ""
-                    line1 = 100
-                    line2 = 200
+                    line1 = 200
+                    line2 = 300
 
                     overlaps = fc.checkoverlaps(num, list_location, overlaps)
                     list_location.append(num)
@@ -137,7 +188,7 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
                         list_location_path.append(num)
 
                     if sublist[1] == 2 or sublist[1] == 1:
-                        fill = '#FF6D8F'  # red
+                        fill = '#FF6D8F'  # pink
                         stroke = '#960c2c'
                         if sublist[2] == 2:  # nonsense
                             fill = '#FFFF8E'  # yellow
@@ -149,7 +200,7 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
                             f.write(shapes.triangle(line2, num, fill, stroke))
                             f.write(shapes.line(line2, num, stroke))
                         else:
-                            line2 = 178 - (overlaps_path * 9)
+                            line2 = 278 - (overlaps_path * 9)
                             f.write(shapes.overlap_triangle(line2, num, fill, stroke))
                     elif sublist[1] == 0:
                         fill = '#c8ff72'  # green
@@ -158,16 +209,16 @@ if os.path.isfile(args.startfile) and os.path.isfile(args.destination):
                         f.write(shapes.triangle(line1, num, fill, stroke))
                         f.write(shapes.line(line1, num, stroke))
                     elif len(edits_list) != 0:
-                        line1 = 70 - (overlaps * 9)
+                        line1 = 170 - (overlaps * 9)
                         f.write(shapes.overlap_triangle(line1, num, fill, stroke))
                     else:
-                        line1 = 78 - (overlaps * 9)
+                        line1 = 178 - (overlaps * 9)
                         f.write(shapes.overlap_triangle(line1, num, fill, stroke))
 
                 # editable bases
                 for sublist in edits_list:
                     mid1 = str(int(sublist) * 3 - 1)
-                    f.write(shapes.circle(65, mid1))
+                    f.write(shapes.circle(165, mid1))
 
                 f.write('</svg>')
                 print "Finished"

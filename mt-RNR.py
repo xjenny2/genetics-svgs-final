@@ -26,13 +26,14 @@ if os.path.exists(args.startfile) and os.path.exists(args.destination):
                 x2 = row["x2"]
                 y2 = row["y2"]
                 color = "black"
-                font = "monospace"
+                font = "arial"
                 if infoType == "b":
-                    f.write('<text x="' + x1 + '" y="' + y1 + '" style = "font-size: 10; '
-                            'fill: ' + color + '; font-family: ' + font +'; text-anchor: middle; dominant-baseline: middle;" > ' + base + '</text>')
-                if infoType == "l":
-                    f.write('<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2
-                            + '" style="stroke: #000000; stroke-width:1; stroke-linecap: round" />')
+                    f.write('<text x="' + x1 + '" y="' + y1 + '" style = "font-size: 11; '
+                            'fill: ' + color + '; font-family: ' + font + '; text-anchor: middle; dominant-baseline: middle;" > ' + base + '<title>' + genCoord + '</title> </text>')
+                elif infoType == "l":
+                    f.write('<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" style="stroke: #000000; stroke-width:1; stroke-linecap: round" />')
+                elif infoType == "d":
+                    f.write('<circle cx="' + x1 + '" cy="' + y1 + '" r="1" />')
             f.write('</svg>')
             print "Finished"
 else:

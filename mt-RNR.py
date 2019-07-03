@@ -53,9 +53,3 @@ if os.path.exists(args.startfile) and os.path.exists(args.destination):
 else:
     print "error"
 
-
-# VUS strip
-# path
-# editable
-# founder mutations for gne
-# dysf -- mutations we have fibroblasts for

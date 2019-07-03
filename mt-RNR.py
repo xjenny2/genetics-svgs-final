@@ -52,4 +52,3 @@ if os.path.exists(args.startfile) and os.path.exists(args.destination):
             print results
 else:
     print "error"
-

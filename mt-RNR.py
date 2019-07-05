@@ -25,15 +25,21 @@ if os.path.exists(args.startfile) and os.path.exists(args.destination):
                 y1 = row["y1"]
                 x2 = row["x2"]
                 y2 = row["y2"]
-                color = "black"
+                textColor = "#000000"
                 font = "arial"
+                lineColor = "#2975d9"  # blue
+                circleColor = "#b30000"  # red
                 if infoType == "b":
-                    f.write('<text x="' + x1 + '" y="' + y1 + '" style = "font-size: 11; '
-                            'fill: ' + color + '; font-family: ' + font + '; text-anchor: middle; dominant-baseline: middle;" > ' + base + '<title>' + genCoord + '</title> </text>')
+                    f.write('<text x="' + x1 + '" y="' + y1 + '" style = "font-size: 11; fill: ' + textColor
+                            + '; font-family: ' + font + '; text-anchor: middle; dominant-baseline: middle;" > '
+                            + base + '<title>' + genCoord + '</title> </text>')
                 elif infoType == "l":
-                    f.write('<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" style="stroke: #000000; stroke-width:1; stroke-linecap: round" />')
+                    f.write('<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" style="stroke: '
+                            + lineColor + '; stroke-width:1; stroke-linecap: round" >' + '<title>' + x1 + ',' + y1
+                            + " " + x2 + "," + y2 + '</title> </line>')
                 elif infoType == "d":
-                    f.write('<circle cx="' + x1 + '" cy="' + y1 + '" r="1" />')
+                    f.write('<circle cx="' + x1 + '" cy="' + y1 + '" r="2" style="fill: ' + circleColor + ';" >'
+                            + '<title>' + x1 + ',' + y1 + '</title> </circle>')
             f.write('</svg>')
             print "Finished"
 else:

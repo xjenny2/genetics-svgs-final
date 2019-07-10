@@ -26,11 +26,11 @@ if os.path.exists(args.startfile) and os.path.exists(args.destination):
                 x2 = row["x2"]
                 y2 = row["y2"]
                 textColor = "#000000"
-                font = "arial"
+                font = "monospace"
                 lineColor = "#2975d9"  # blue
                 circleColor = "#b30000"  # red
                 if infoType == "b":
-                    f.write('<text x="' + x1 + '" y="' + y1 + '" style = "font-size: 11; fill: ' + textColor
+                    f.write('<text x="' + x1 + '" y="' + y1 + '" style = "font-size: 8; fill: ' + textColor
                             + '; font-family: ' + font + '; text-anchor: middle; dominant-baseline: middle;" > '
                             + base + '<title>' + genCoord + '</title> </text>')
                 elif infoType == "l":

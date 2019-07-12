@@ -1,7 +1,7 @@
 # README
 
 ## Getting Started
-The scripts in this repository (generalsvg_clinvar.py and generalsvg_gnomad.py) create SVG figures representing the mutations along a given protein.
+Two scripts in this repository (generalsvg_clinvar.py and generalsvg_gnomad.py) create SVG figures representing the mutations along a given protein.  Two others (mt-RNR.py and mt-RNR-variants.py) create SVG figures representing secondary structure in mitochondrial rRNAs.
 
 ### Prerequisites
 These scripts use Python 2.7 and the following Python libraries:
@@ -16,7 +16,7 @@ These scripts use Python 2.7 and the following Python libraries:
 
 Packages with a * must be installed first.
 
-In addition, the ClinVar script requires the download of this data file: https://github.com/macarthur-lab/clinvar/blob/master/output/b37/single/clinvar_alleles.single.b37.tsv.gz.  Certain features (such as marking editable bases or adding a ccrs percentiles box) require the user to have those files as well.
+In addition, the ClinVar script requires the download of this data file, and the mt-RNR scripts require an input .tsv of the coordinates for the bases, etc. in the image: https://github.com/macarthur-lab/clinvar/blob/master/output/b37/single/clinvar_alleles.single.b37.tsv.gz.  Certain features (such as marking editable bases or adding a ccrs percentiles box) require the user to have those files as well.
 
 ## Programs
 ### Contents

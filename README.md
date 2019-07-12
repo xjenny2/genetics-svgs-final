@@ -13,7 +13,9 @@ These scripts use Python 2.7 and the following Python libraries:
 - argparse *
 - csv 
 - lxml * (other html parsers might work, but no guarantees)
+
 Packages with a * must be installed first.
+
 In addition, the ClinVar script requires the download of this data file: https://github.com/macarthur-lab/clinvar/blob/master/output/b37/single/clinvar_alleles.single.b37.tsv.gz.  Certain features (such as marking editable bases or adding a ccrs percentiles box) require the user to have those files as well.
 
 ## Programs
@@ -24,6 +26,9 @@ In addition, the ClinVar script requires the download of this data file: https:/
   - [functionsgnomad.py](functionsgnomad.py): various functions used in the generalsvg_gnomad.py program
 - [shapes.py](shapes.py): various functions for writing SVG shapes (used in for both ClinVar and gnomAD)
 - [otheroptions.py](otheroptions.py): additional code not in "default" program but which could be useful (currently contains code to add a ccrs percentiles box)
+- [mt-RNR.py](mt-RNR.py): draws SVG file of mt-rRNA structure
+  - [mt-RNR.svg](mt-RNR.svg): Output of mt-RNR.py
+- [mt-RNR-variants.py](mt-RNR-variants.py): same as above but can user input a variant which will be highlighted on the image
 ### generalsvg_clinvar:
 
 #### Usage: generalsvg_gnomad.py input destination [-h]

@@ -27,6 +27,7 @@ In addition, the ClinVar script requires the download of this data file: https:/
 - [shapes.py](shapes.py): various functions for writing SVG shapes (used in for both ClinVar and gnomAD)
 - [otheroptions.py](otheroptions.py): additional code not in "default" program but which could be useful (currently contains code to add a ccrs percentiles box)
 - [mt-RNR.py](mt-RNR.py): draws SVG file of mt-rRNA structure
+  - [mt-RNR1.tsv](mt-RNR1.tsv): Input file of coordinates for small subunit
   - [mt-RNR.svg](mt-RNR.svg): Output of mt-RNR.py
 - [mt-RNR-variants.py](mt-RNR-variants.py): same as above but can user input a variant which will be highlighted on the image
 ### generalsvg_clinvar:
@@ -67,6 +68,23 @@ In addition, the ClinVar script requires the download of this data file: https:/
   - currently only considers tabix entries for which all AS_FilterStatus values are PASS (if there's two variants in an entry, and one is PASS and one isn't, the entire entry is discarded)
 - Destination file must exist ahead of time.  Code could be altered to create + write to a new file by deleting `if os.path.isfile(args.destination:` and `else: print error` from [these](https://github.com/xjenny2/genetics-svgs-final/blob/75bfab5b1b99c582cc2cf6f4714cd06bf0e926e5/generalsvg_gnomad.py#L13) [lines](https://github.com/xjenny2/genetics-svgs-final/blob/698da93c3bceda3f2280dd4ae8d22658e40080c0/generalsvg_gnomad.py#L226-#L227) of code and then unindenting the code block.
 
+### mt-RNR: 
+
+#### Usage: mt-RNR.py input destination [-h]
+- input: input file of coordinates for objects in image (tsv format)
+- destination: destination file (svg)
+- -h/--help: show help message
+
+### mt-RNR-variants:
+
+#### Usage: mt-RNR-variants.py input destination [-h]
+- input: input file of coordinates for objects in image (tsv format)
+- destination: destination file (svg)
+- -h/--help: show help message
+
+#### Script will also prompt for:
+- genomic coordinate of mutation
+- the new base
 
 ### otheroptions:
 Not a standalone script; rather, a dump for bits of code that could be added to the generalsvg_gnomad or generalsvg_clinvar programs to implement additional features.  

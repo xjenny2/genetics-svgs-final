@@ -28,7 +28,7 @@ In addition, the ClinVar script requires the download of this data file: https:/
 - [otheroptions.py](otheroptions.py): additional code not in "default" program but which could be useful (currently contains code to add a ccrs percentiles box)
 - [mt-RNR.py](mt-RNR.py): draws SVG file of mt-rRNA structure
   - [mt-RNR1.tsv](mt-RNR1.tsv): Input file of coordinates for small subunit
-  - [mt-RNR.svg](mt-RNR.svg): Output of mt-RNR.py
+  - [mt-RNR1.svg](mt-RNR1.svg): Output of mt-RNR.py
 - [mt-RNR-variants.py](mt-RNR-variants.py): same as above but can user input a variant which will be highlighted on the image
 ### generalsvg_clinvar:
 
